@@ -1,6 +1,6 @@
 package co.com.jcuadrado.api;
 
-import co.com.jcuadrado.api.constant.SuccessStatus;
+import co.com.jcuadrado.api.constant.api.HttpStatusConstants;
 import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
 import co.com.jcuadrado.api.mapper.CreditRequestDTOMapper;
 import co.com.jcuadrado.api.util.ResponseUtil;
@@ -24,10 +24,12 @@ public class Handler {
 
     public Mono<ServerResponse> listenSaveRequest(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateCreditRequestDTO.class)
-                .flatMap(createCreditRequestDTO -> ValidationUtil.validateAndReturnError(validator, createCreditRequestDTO)
+                .flatMap(createCreditRequestDTO -> ValidationUtil
+                        .validateAndReturnError(validator, createCreditRequestDTO)
                         .switchIfEmpty(useCase.saveCreditRequest(creditRequestDTOMapper.toModel(createCreditRequestDTO))
                                 .transform(creditRequestDTOMapper::toDTOMono)
-                                .flatMap(creditRequestDTO -> ResponseUtil.buildSuccessResponse(creditRequestDTO, SuccessStatus.CREATED))));
-                     
+                                .flatMap(creditRequestDTO -> ResponseUtil.buildSuccessResponse(creditRequestDTO,
+                                        HttpStatusConstants.CREATED))));
+
     }
 }
