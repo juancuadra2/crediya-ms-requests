@@ -4,7 +4,7 @@ import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import co.com.jcuadrado.usecase.creditstatus.CreditStatusUseCase;
 import reactor.core.publisher.Mono;
 
-public record CreditStatusValidator() {
+public class CreditStatusValidator {
 
     public static Mono<CreditRequest> validateAndSetId(CreditRequest creditRequest, CreditStatusUseCase creditStatusUseCase) {
         return creditStatusUseCase.getCreditStatusByName(creditRequest.getStatus())

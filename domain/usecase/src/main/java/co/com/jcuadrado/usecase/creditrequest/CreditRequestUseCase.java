@@ -1,6 +1,6 @@
 package co.com.jcuadrado.usecase.creditrequest;
 
-import co.com.jcuadrado.constant.CreditStatus;
+import co.com.jcuadrado.constant.CreditStatusEnum;
 import co.com.jcuadrado.handler.*;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import co.com.jcuadrado.model.creditrequest.gateways.CreditRequestRepository;
@@ -15,7 +15,7 @@ public record CreditRequestUseCase(
         UserUseCase userUseCase) {
 
     public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest) {
-        creditRequest.setStatus(CreditStatus.PENDING.getDescription());
+        creditRequest.setStatus(CreditStatusEnum.PENDING.getDescription());
         return validateCreditRequest(creditRequest)
                 .flatMap(creditRequestRepository::saveCreditRequest);
     }

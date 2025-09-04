@@ -10,6 +10,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 class CreditStatusUseCaseTest {
@@ -27,6 +28,7 @@ class CreditStatusUseCaseTest {
     void testGetByNameSuccess() {
         String name = "Pendiente de revisión";
         CreditStatus creditStatus = CreditStatus.builder()
+                .id("ID-123")
                 .name("Pendiente de revisión")
                 .build();
 
@@ -35,7 +37,10 @@ class CreditStatusUseCaseTest {
         Mono<CreditStatus> result = useCase.getCreditStatusByName(name);
 
         StepVerifier.create(result)
-                .expectNextMatches(value -> value.getName().equals(name))
+                .assertNext(value -> {
+                    assertNotNull(value.getId());
+                    assertEquals(name, value.getName());
+                })
                 .verifyComplete();
 
         Mockito.verify(repository).getCreditStatusByName(name);
