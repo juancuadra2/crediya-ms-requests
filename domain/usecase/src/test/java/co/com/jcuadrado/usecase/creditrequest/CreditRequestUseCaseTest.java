@@ -45,7 +45,12 @@ class CreditRequestUseCaseTest {
 
     @Test
     void testSaveCreditRequest() {
-        AuthResponse authResponse = AuthResponse.builder().build();
+        AuthResponse authResponse = AuthResponse.builder()
+                .token("Token")
+                .email("admin@mail.com")
+                .role("ADMIN")
+                .build();
+
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(new BigDecimal("1000"))
                 .limitDate(LocalDate.now().plusDays(30))
