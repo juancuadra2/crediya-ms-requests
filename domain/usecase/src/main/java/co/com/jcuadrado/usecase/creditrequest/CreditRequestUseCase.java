@@ -2,6 +2,7 @@ package co.com.jcuadrado.usecase.creditrequest;
 
 import co.com.jcuadrado.constant.CreditStatusEnum;
 import co.com.jcuadrado.handler.*;
+import co.com.jcuadrado.model.auth.AuthResponse;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import co.com.jcuadrado.model.creditrequest.gateways.CreditRequestRepository;
 import co.com.jcuadrado.usecase.creditstatus.CreditStatusUseCase;
@@ -14,7 +15,8 @@ public record CreditRequestUseCase(
         CreditStatusUseCase creditStatusUseCase, CreditTypeUseCase creditTypeUseCase,
         UserUseCase userUseCase) {
 
-    public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest) {
+    public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest, AuthResponse authResponse) {
+        //TODO: Implmentar validacion de que si es CLIENT no puede crear solicitudes de otro usuario
         creditRequest.setStatus(CreditStatusEnum.PENDING.getDescription());
         return validateCreditRequest(creditRequest)
                 .flatMap(creditRequestRepository::saveCreditRequest);
