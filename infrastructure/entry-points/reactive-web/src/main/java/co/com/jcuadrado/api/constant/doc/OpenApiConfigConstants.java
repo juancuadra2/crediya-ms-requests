@@ -23,4 +23,8 @@ public final class OpenApiConfigConstants {
     // Response Names
     public static final String SUCCESS_RESPONSE_NAME = "success";
     public static final String VALIDATION_ERROR_NAME = "validationError";
+
+    // Request Body Descriptions
+    public static final String CREDIT_REQUEST_BODY_DESCRIPTION = "Datos para crear una nueva solicitud de crédito";
+    public static final String CREDIT_REQUEST_EXAMPLE_SUMMARY = "Ejemplo de solicitud de crédito";
 }

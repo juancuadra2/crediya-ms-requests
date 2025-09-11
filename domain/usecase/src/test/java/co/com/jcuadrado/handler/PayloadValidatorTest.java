@@ -11,7 +11,7 @@ import reactor.test.StepVerifier;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class PayloadValidatorTest {
+class PayloadValidatorTest {
 
     @Test
     void testSuccess() {

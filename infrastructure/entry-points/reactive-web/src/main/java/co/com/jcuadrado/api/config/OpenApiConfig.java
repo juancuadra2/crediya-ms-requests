@@ -5,6 +5,8 @@ import co.com.jcuadrado.api.constant.doc.ExampleConstants;
 import co.com.jcuadrado.api.constant.doc.ResponseConstants;
 import co.com.jcuadrado.api.constant.doc.OpenApiConfigConstants;
 import co.com.jcuadrado.api.constant.doc.SchemaConstants;
+import co.com.jcuadrado.api.constant.doc.SecurityConfigConstants;
+import co.com.jcuadrado.api.constant.doc.ServerConfigConstants;
 import co.com.jcuadrado.api.dto.ErrorResponseDTO;
 import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
 import co.com.jcuadrado.api.dto.request.CreditRequestDTO;
@@ -22,6 +24,8 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.RequestBody;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Bean;
@@ -38,14 +42,6 @@ import java.util.List;
 @Configuration
 public class OpenApiConfig {
 
-    private static final String DEVELOPMENT_SERVER_URL = "http://localhost:8080";
-    private static final String DEVELOPMENT_SERVER_DESCRIPTION = "Servidor de desarrollo";
-    
-    private static final String CONTACT_NAME = "Equipo de Desarrollo Crediya";
-    private static final String CONTACT_EMAIL = "desarrollo@crediya.com";
-    private static final String LICENSE_NAME = "Apache 2.0";
-    private static final String LICENSE_URL = "https://www.apache.org/licenses/LICENSE-2.0";
-
     @Bean
     OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -53,6 +49,7 @@ public class OpenApiConfig {
                 .servers(createServerList())
                 .addTagsItem(createCreditRequestTag())
                 .components(createComponents())
+                .addSecurityItem(new SecurityRequirement().addList(SecurityConfigConstants.BEARER_AUTH_SCHEME_NAME))
                 .path(EndpointConstants.REQUEST_API_PATH, createCreditRequestPathItem());
     }
 
@@ -73,8 +70,8 @@ public class OpenApiConfig {
      */
     private Contact createContact() {
         return new Contact()
-                .name(CONTACT_NAME)
-                .email(CONTACT_EMAIL);
+                .name(ServerConfigConstants.CONTACT_NAME)
+                .email(ServerConfigConstants.CONTACT_EMAIL);
     }
 
     /**
@@ -82,8 +79,8 @@ public class OpenApiConfig {
      */
     private License createLicense() {
         return new License()
-                .name(LICENSE_NAME)
-                .url(LICENSE_URL);
+                .name(ServerConfigConstants.LICENSE_NAME)
+                .url(ServerConfigConstants.LICENSE_URL);
     }
 
     /**
@@ -92,8 +89,8 @@ public class OpenApiConfig {
     private List<Server> createServerList() {
         return List.of(
                 new Server()
-                        .url(DEVELOPMENT_SERVER_URL)
-                        .description(DEVELOPMENT_SERVER_DESCRIPTION)
+                        .url(ServerConfigConstants.DEVELOPMENT_SERVER_URL)
+                        .description(ServerConfigConstants.DEVELOPMENT_SERVER_DESCRIPTION)
         );
     }
 
@@ -107,7 +104,7 @@ public class OpenApiConfig {
     }
 
     /**
-     * Creates components with all necessary schemas.
+     * Creates components with all necessary schemas and security schemes.
      * Follows the Dependency Inversion Principle by using utility methods.
      */
     private Components createComponents() {
@@ -118,7 +115,21 @@ public class OpenApiConfig {
         OpenApiUtil.addSchemaToComponents(components, CreditRequestDTO.class);
         OpenApiUtil.addSchemaToComponents(components, ErrorResponseDTO.class);
 
+        // Add security schemes
+        components.addSecuritySchemes(SecurityConfigConstants.BEARER_AUTH_SCHEME_NAME, createBearerAuthScheme());
+
         return components;
+    }
+
+    /**
+     * Creates the Bearer authentication security scheme.
+     */
+    private SecurityScheme createBearerAuthScheme() {
+        return new SecurityScheme()
+                .type(SecurityScheme.Type.HTTP)
+                .scheme(SecurityConfigConstants.BEARER_SCHEME)
+                .bearerFormat(SecurityConfigConstants.BEARER_FORMAT)
+                .description(SecurityConfigConstants.BEARER_DESCRIPTION);
     }
 
     /**
@@ -148,14 +159,14 @@ public class OpenApiConfig {
      */
     private RequestBody createCreditRequestBody() {
         return new RequestBody()
-                .description("Datos para crear una nueva solicitud de crédito")
+                .description(OpenApiConfigConstants.CREDIT_REQUEST_BODY_DESCRIPTION)
                 .required(true)
                 .content(new Content()
                         .addMediaType(SchemaConstants.APPLICATION_JSON, new MediaType()
                                 .schema(new Schema<>().$ref(SchemaConstants.COMPONENT_SCHEMA_CREATE_CREDIT_REQUEST_DTO))
                                 .addExamples(OpenApiConfigConstants.SUCCESS_RESPONSE_NAME,
                                         OpenApiUtil.createExample(
-                                                "Ejemplo de solicitud de crédito",
+                                                OpenApiConfigConstants.CREDIT_REQUEST_EXAMPLE_SUMMARY,
                                                 ExampleConstants.CREATE_CREDIT_REQUEST_EXAMPLE))));
     }
 
@@ -166,6 +177,7 @@ public class OpenApiConfig {
         return new ApiResponses()
                 .addApiResponse(SchemaConstants.STATUS_201, createSuccessResponse())
                 .addApiResponse(SchemaConstants.STATUS_400, createBadRequestResponse())
+                .addApiResponse(SchemaConstants.STATUS_401, createUnauthorizedResponse())
                 .addApiResponse(SchemaConstants.STATUS_500, createInternalErrorResponse());
     }
 
@@ -197,6 +209,21 @@ public class OpenApiConfig {
                                         OpenApiUtil.createExample(
                                                 ResponseConstants.VALIDATION_ERROR_SUMMARY,
                                                 ExampleConstants.CREDIT_REQUEST_VALIDATION_ERROR_EXAMPLE))));
+    }
+
+    /**
+     * Creates the 401 Unauthorized error response.
+     */
+    private ApiResponse createUnauthorizedResponse() {
+        return new ApiResponse()
+                .description(SecurityConfigConstants.UNAUTHORIZED_DESCRIPTION)
+                .content(new Content()
+                        .addMediaType(SchemaConstants.APPLICATION_JSON, new MediaType()
+                                .schema(new Schema<>().$ref(SchemaConstants.COMPONENT_SCHEMA_ERROR_RESPONSE_DTO))
+                                .addExamples(SecurityConfigConstants.UNAUTHORIZED_EXAMPLE_NAME,
+                                        OpenApiUtil.createExample(
+                                                SecurityConfigConstants.UNAUTHORIZED_EXAMPLE_SUMMARY,
+                                                SecurityConfigConstants.UNAUTHORIZED_EXAMPLE_VALUE))));
     }
 
     /**

@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserUseCaseTest {
+class UserUseCaseTest {
 
     @Mock
     private UserRepository userRepository;
@@ -27,6 +27,7 @@ public class UserUseCaseTest {
 
     @Test
     void testGetUserByDocumentNumberSuccess() {
+        String token = "Token";
         String documentNumber = "123456789";
         User user = User.builder()
                 .documentNumber(documentNumber)
@@ -34,24 +35,25 @@ public class UserUseCaseTest {
                 .email("test@mail.com")
                 .build();
 
-        when(userRepository.getUserByDocumentNumber(documentNumber)).thenReturn(Mono.just(user));
+        when(userRepository.getUserByDocumentNumber(documentNumber, token)).thenReturn(Mono.just(user));
 
-        Mono<User> result = userUseCase.getUserByDocumentNumber(documentNumber);
+        Mono<User> result = userUseCase.getUserByDocumentNumber(documentNumber, token);
 
         StepVerifier.create(result)
                 .expectNext(user)
                 .verifyComplete();
 
-        verify(userRepository).getUserByDocumentNumber(documentNumber);
+        verify(userRepository).getUserByDocumentNumber(documentNumber, token);
     }
 
     @Test
     void testGetUserByDocumentNumberNotFound() {
+        String token = "Token";
         String documentNumber = "123456789";
 
-        when(userRepository.getUserByDocumentNumber(documentNumber)).thenReturn(Mono.empty());
+        when(userRepository.getUserByDocumentNumber(documentNumber, token)).thenReturn(Mono.empty());
 
-        Mono<User> result = userUseCase.getUserByDocumentNumber(documentNumber);
+        Mono<User> result = userUseCase.getUserByDocumentNumber(documentNumber, token);
 
         StepVerifier.create(result)
                 .expectErrorSatisfies(error -> {
@@ -60,7 +62,7 @@ public class UserUseCaseTest {
                 })
                 .verify();
 
-        verify(userRepository).getUserByDocumentNumber(documentNumber);
+        verify(userRepository).getUserByDocumentNumber(documentNumber, token);
     }
 
 }

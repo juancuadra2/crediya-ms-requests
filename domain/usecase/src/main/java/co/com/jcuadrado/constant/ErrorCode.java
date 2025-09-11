@@ -9,4 +9,5 @@ public enum ErrorCode {
     CONFLICT,
     INTERNAL_ERROR,
     UNAUTHORIZED,
+    FORBIDDEN
 }

@@ -9,8 +9,8 @@ import reactor.core.publisher.Mono;
 
 public record UserUseCase(UserRepository userRepository) {
 
-    public Mono<User> getUserByDocumentNumber(String documentNumber) {
-        return userRepository.getUserByDocumentNumber(documentNumber)
+    public Mono<User> getUserByDocumentNumber(String documentNumber, String token) {
+        return userRepository.getUserByDocumentNumber(documentNumber, token)
                 .switchIfEmpty(Mono.error(new BusinessException(UserConstants.USER_NOT_FOUND, ErrorCode.NOT_FOUND)));
     }
 }
