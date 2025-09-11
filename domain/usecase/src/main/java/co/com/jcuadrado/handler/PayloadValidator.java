@@ -4,8 +4,10 @@ import co.com.jcuadrado.constant.CreditRequestConstants;
 import co.com.jcuadrado.constant.ErrorCode;
 import co.com.jcuadrado.exception.BusinessException;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
+import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class PayloadValidator {
     public static Mono<CreditRequest> validate(CreditRequest creditRequest){
         if (creditRequest == null) {

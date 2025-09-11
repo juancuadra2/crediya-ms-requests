@@ -21,10 +21,10 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class Handler {
 
-    private final CreditRequestUseCase useCase;
+    private final CreditRequestUseCase creditRequestUseCase;
+    private final TokenManagerUseCase tokenManagerUseCase;
     private final Validator validator;
     private final CreditRequestDTOMapper creditRequestDTOMapper;
-    private final TokenManagerUseCase tokenManagerUseCase;
 
     public Mono<ServerResponse> listenSaveRequest(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(CreateCreditRequestDTO.class)
@@ -32,18 +32,12 @@ public class Handler {
                 .flatMap(tuple -> {
                     CreateCreditRequestDTO createCreditRequestDTO = tuple.getT1();
                     AuthResponse authResponse = tuple.getT2();
-
-                    return ValidationUtil.validateAndReturnError(validator, createCreditRequestDTO)
-                            .switchIfEmpty(
-                                    useCase.saveCreditRequest(
-                                                    creditRequestDTOMapper.toModel(createCreditRequestDTO), authResponse) // pasas authResponse
-                                            .transform(creditRequestDTOMapper::toDTOMono)
-                                            .flatMap(creditRequestDTO ->
-                                                    ResponseUtil.buildSuccessResponse(
-                                                            creditRequestDTO,
-                                                            HttpStatusConstants.CREATED
-                                                    )
-                                            )
+                    return ValidationUtil.validateOrThrow(validator, createCreditRequestDTO)
+                            .then(Mono.defer(() -> creditRequestUseCase.saveCreditRequest(creditRequestDTOMapper.toModel(createCreditRequestDTO), authResponse)
+                                    .transform(creditRequestDTOMapper::toDTOMono)
+                                    .flatMap(creditRequestDTO ->
+                                            ResponseUtil.buildSuccessResponse(creditRequestDTO, HttpStatusConstants.CREATED)
+                                    ))
                             );
                 });
     }
@@ -60,6 +54,5 @@ public class Handler {
                         .build()
                 );
     }
-
 
 }

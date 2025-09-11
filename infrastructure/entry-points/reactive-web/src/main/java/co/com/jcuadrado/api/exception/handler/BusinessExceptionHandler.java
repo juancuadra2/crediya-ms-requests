@@ -38,6 +38,7 @@ public class BusinessExceptionHandler implements ExceptionHandler<BusinessExcept
             case ErrorCode.NOT_FOUND -> HttpStatus.NOT_FOUND;
             case ErrorCode.CONFLICT -> HttpStatus.CONFLICT;
             case ErrorCode.UNAUTHORIZED -> HttpStatus.UNAUTHORIZED;
+            case ErrorCode.FORBIDDEN -> HttpStatus.FORBIDDEN;
             default -> HttpStatus.INTERNAL_SERVER_ERROR;
         };
     }

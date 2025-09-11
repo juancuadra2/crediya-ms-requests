@@ -19,10 +19,11 @@ public class UserServiceClient implements UserRepository {
 
     @Override
     @CircuitBreaker(name = UserServiceClientConstants.USER_SERVICE_CIRCUIT_BREAKER_NAME)
-    public Mono<User> getUserByDocumentNumber(String documentNumber) {
+    public Mono<User> getUserByDocumentNumber(String documentNumber, String token) {
         return client
                 .get()
                 .uri(UserServiceClientConstants.USER_BY_DOCUMENT_NUMBER_URI, documentNumber)
+                .header("Authorization", "Bearer " + token)
                 .retrieve()
                 .bodyToMono(User.class)
                 .onErrorResume(WebClientResponseException.NotFound.class,

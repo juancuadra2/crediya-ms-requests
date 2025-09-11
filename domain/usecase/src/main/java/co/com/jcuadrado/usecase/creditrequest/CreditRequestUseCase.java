@@ -16,15 +16,14 @@ public record CreditRequestUseCase(
         UserUseCase userUseCase) {
 
     public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest, AuthResponse authResponse) {
-        //TODO: Implmentar validacion de que si es CLIENT no puede crear solicitudes de otro usuario
         creditRequest.setStatus(CreditStatusEnum.PENDING.getDescription());
-        return validateCreditRequest(creditRequest)
+        return validateCreditRequest(creditRequest, authResponse)
                 .flatMap(creditRequestRepository::saveCreditRequest);
     }
 
-    private Mono<CreditRequest> validateCreditRequest(CreditRequest creditRequest) {
+    private Mono<CreditRequest> validateCreditRequest(CreditRequest creditRequest, AuthResponse authResponse) {
         return PayloadValidator.validate(creditRequest)
-                .flatMap(cr1 -> UserValidator.validateAndSetEmail(creditRequest, userUseCase))
+                .flatMap(cr1 -> UserValidator.validateAndSetEmail(creditRequest, userUseCase, authResponse))
                 .flatMap(cr2 -> CreditStatusValidator.validateAndSetId(creditRequest, creditStatusUseCase))
                 .flatMap(cr3 -> CreditTypeValidator.validateAndSetId(creditRequest, creditTypeUseCase));
     }

@@ -6,6 +6,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import co.com.jcuadrado.model.auth.AuthResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +26,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
-public class CreditRequestUseCaseTest {
+class CreditRequestUseCaseTest {
 
     @Mock
     private CreditRequestRepository creditRequestRepository;
@@ -43,7 +44,8 @@ public class CreditRequestUseCaseTest {
     private CreditRequestUseCase creditRequestUseCase;
 
     @Test
-    public void testSaveCreditRequest() {
+    void testSaveCreditRequest() {
+        AuthResponse authResponse = AuthResponse.builder().build();
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(new BigDecimal("1000"))
                 .limitDate(LocalDate.now().plusDays(30))
@@ -53,7 +55,7 @@ public class CreditRequestUseCaseTest {
                 .status(CreditStatusEnum.PENDING.getDescription())
                 .build();
 
-        when(userUseCase.getUserByDocumentNumber(creditRequest.getDocumentNumber()))
+        when(userUseCase.getUserByDocumentNumber(creditRequest.getDocumentNumber(), authResponse.getToken()))
                 .thenReturn(Mono.just(User.builder()
                         .documentNumber(creditRequest.getDocumentNumber())
                         .email(creditRequest.getEmail())
@@ -73,13 +75,13 @@ public class CreditRequestUseCaseTest {
 
         when(creditRequestRepository.saveCreditRequest(creditRequest)).thenReturn(Mono.just(creditRequest));
 
-        Mono<CreditRequest> result = creditRequestUseCase.saveCreditRequest(creditRequest);
+        Mono<CreditRequest> result = creditRequestUseCase.saveCreditRequest(creditRequest, authResponse);
 
         StepVerifier.create(result)
                 .expectNext(creditRequest)
                 .verifyComplete();
 
         verify(creditRequestRepository).saveCreditRequest(creditRequest);
-        verify(userUseCase).getUserByDocumentNumber(creditRequest.getDocumentNumber());
+        verify(userUseCase).getUserByDocumentNumber(creditRequest.getDocumentNumber(), authResponse.getToken());
     }
 }
