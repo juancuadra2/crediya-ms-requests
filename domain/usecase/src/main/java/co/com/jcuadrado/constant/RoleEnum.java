@@ -3,6 +3,8 @@ package co.com.jcuadrado.constant;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class UserConstants {
-    public static final String USER_NOT_FOUND = "Usuario no encontrado";
+public enum RoleEnum {
+    ADMIN,
+    ADVISOR,
+    CLIENT
 }

@@ -11,7 +11,7 @@ public final class CreditRequestDtoConstants {
 
     // Field descriptions for API documentation
     public static final String AMOUNT_DESCRIPTION = "Monto del crédito solicitado en pesos colombianos";
-    public static final String LIMIT_DATE_DESCRIPTION = "Fecha límite de pago del crédito";
+    public static final String TERM_DESCRIPTION = "Plazo de pago del crédito en meses.";
     public static final String DOCUMENT_NUMBER_DESCRIPTION = "Número de documento de identidad del solicitante";
     public static final String CREDIT_TYPE_DESCRIPTION = "Tipo de crédito solicitado";
     public static final String STATUS_DESCRIPTION = "Estado actual de la solicitud de crédito";
@@ -19,7 +19,7 @@ public final class CreditRequestDtoConstants {
 
     // Examples for API documentation
     public static final String AMOUNT_EXAMPLE = "1500000.00";
-    public static final String LIMIT_DATE_EXAMPLE = "2025-12-31";
+    public static final String TERM_EXAMPLE = "12";
     public static final String DOCUMENT_NUMBER_EXAMPLE = "12345678";
     public static final String CREDIT_TYPE_EXAMPLE = "PERSONAL";
     public static final String STATUS_EXAMPLE = "PENDING";

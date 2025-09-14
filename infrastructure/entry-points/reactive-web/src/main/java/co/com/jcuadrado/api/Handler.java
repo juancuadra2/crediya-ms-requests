@@ -3,13 +3,13 @@ package co.com.jcuadrado.api;
 import co.com.jcuadrado.api.constant.api.HttpStatusConstants;
 import co.com.jcuadrado.api.constant.auth.AuthRoles;
 import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
+import co.com.jcuadrado.api.dto.request.CreditRequestFilterDTO;
 import co.com.jcuadrado.api.mapper.CreditRequestDTOMapper;
-import co.com.jcuadrado.api.util.AuthorizationUtil;
-import co.com.jcuadrado.api.util.ResponseUtil;
-import co.com.jcuadrado.api.util.TokenUtil;
-import co.com.jcuadrado.api.util.ValidationUtil;
-import co.com.jcuadrado.model.auth.AuthResponse;
+import co.com.jcuadrado.api.mapper.CreditRequestFilterDTOMapper;
+import co.com.jcuadrado.api.util.*;
+import co.com.jcuadrado.model.auth.AuthInfo;
 import co.com.jcuadrado.usecase.auth.TokenManagerUseCase;
+import co.com.jcuadrado.usecase.creditrequest.CreditRequestListUseCase;
 import co.com.jcuadrado.usecase.creditrequest.CreditRequestUseCase;
 import jakarta.validation.Validator;
 
@@ -25,6 +25,8 @@ public class Handler {
 
     private final CreditRequestUseCase creditRequestUseCase;
     private final TokenManagerUseCase tokenManagerUseCase;
+    private final CreditRequestListUseCase creditRequestListUseCase;
+    private final CreditRequestFilterDTOMapper creditRequestFilterDTOMapper;
     private final Validator validator;
     private final CreditRequestDTOMapper creditRequestDTOMapper;
 
@@ -34,9 +36,9 @@ public class Handler {
                         .zipWith(getAuthInfo(serverRequest))
                         .flatMap(tuple -> {
                             CreateCreditRequestDTO createCreditRequestDTO = tuple.getT1();
-                            AuthResponse authResponse = tuple.getT2();
+                            AuthInfo authInfo = tuple.getT2();
                             return ValidationUtil.validateOrThrow(validator, createCreditRequestDTO)
-                                    .then(Mono.defer(() -> creditRequestUseCase.saveCreditRequest(creditRequestDTOMapper.toModel(createCreditRequestDTO), authResponse)
+                                    .then(Mono.defer(() -> creditRequestUseCase.saveCreditRequest(creditRequestDTOMapper.toModel(createCreditRequestDTO), authInfo)
                                             .transform(creditRequestDTOMapper::toDTOMono)
                                             .flatMap(creditRequestDTO ->
                                                     ResponseUtil.buildSuccessResponse(creditRequestDTO, HttpStatusConstants.CREATED)
@@ -45,12 +47,21 @@ public class Handler {
                         }));
     }
 
-    private Mono<AuthResponse> getAuthInfo(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenGetRequests(ServerRequest serverRequest) {
+        CreditRequestFilterDTO creditRequestFilterDTO = QueryParamUtil.getParams(serverRequest, CreditRequestFilterDTO.class);
+        return getAuthInfo(serverRequest)
+                .flatMap(authInfo ->
+                        creditRequestListUseCase.getCreditRequests(creditRequestFilterDTOMapper.toModel(creditRequestFilterDTO), authInfo)
+                )
+                .flatMap(pageResponse -> ResponseUtil.buildSuccessResponse(pageResponse, HttpStatusConstants.OK));
+    }
+
+    private Mono<AuthInfo> getAuthInfo(ServerRequest serverRequest) {
         return TokenUtil.extractToken(serverRequest)
                 .flatMap(token -> Mono.zip(
                         Mono.just(token), tokenManagerUseCase.getSubject(token), tokenManagerUseCase.getRoles(token).next())
                 )
-                .map(tuple -> AuthResponse.builder()
+                .map(tuple -> AuthInfo.builder()
                         .token(tuple.getT1())
                         .email(tuple.getT2())
                         .role(tuple.getT3())

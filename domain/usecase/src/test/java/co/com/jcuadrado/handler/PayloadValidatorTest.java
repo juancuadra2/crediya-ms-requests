@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 class PayloadValidatorTest {
 
@@ -17,9 +16,9 @@ class PayloadValidatorTest {
     void testSuccess() {
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(BigDecimal.TEN)
-                .limitDate(LocalDate.now().plusDays(30))
+                .term(12)
                 .documentNumber("123456789")
-                .status(CreditStatusEnum.PENDING.getDescription())
+                .status(CreditStatusEnum.PENDING.name())
                 .creditType("PERSONAL")
                 .build();
 
@@ -67,7 +66,7 @@ class PayloadValidatorTest {
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
                     BusinessException businessException = (BusinessException) error;
-                    return businessException.getMessage().equals(CreditRequestConstants.LIMIT_DATE_REQUIRED);
+                    return businessException.getMessage().equals(CreditRequestConstants.TERM_REQUIRED);
                 })
                 .verify();
     }
@@ -76,7 +75,7 @@ class PayloadValidatorTest {
     void testFailDocumentNumberNull() {
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(BigDecimal.TEN)
-                .limitDate(LocalDate.now().plusDays(30))
+                .term(12)
                 .build();
 
         Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
@@ -93,7 +92,7 @@ class PayloadValidatorTest {
     void testFailStatusNull() {
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(BigDecimal.TEN)
-                .limitDate(LocalDate.now().plusDays(30))
+                .term(12)
                 .documentNumber("123456789")
                 .build();
 
@@ -111,9 +110,9 @@ class PayloadValidatorTest {
     void testFailCreditTypeNull() {
         CreditRequest creditRequest = CreditRequest.builder()
                 .amount(BigDecimal.TEN)
-                .limitDate(LocalDate.now().plusDays(30))
+                .term(12)
                 .documentNumber("123456789")
-                .status(CreditStatusEnum.PENDING.getDescription())
+                .status(CreditStatusEnum.PENDING.name())
                 .build();
 
         Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);

@@ -11,14 +11,22 @@ spring:
       path: "/h2"
   profiles:
     include: null
+  kafka:
+    consumer:
+      bootstrap-servers: "localhost:9092"
+      group-id: "CrediYaMsRequests"
 adapters:
   r2dbc:
     host: "localhost"
-    port: 5432
+    port: 5433
     database: "crediya_requests"
     schema: "public"
-    username: "jcuadrado"
-    password: "jcu4dr4d0"
+    username: "jcuadrado_requests"
+    password: "jcuadrado_requests"
+  kafka:
+    consumer:
+      topic: "dbserver1.public.users"
+      auto-offset-reset: "earliest"
 management:
   endpoints:
     web:
@@ -52,3 +60,7 @@ resilience4j:
 security:
   jwt:
     secret: "amN1YWRyYWRvX3NlY3JldF9rZXlfZm9yX2p3dF90b2tlbl9nZW5lcmF0aW9u"
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: "DEBUG"
+    io.r2dbc.postgresql.PARAM: "DEBUG"

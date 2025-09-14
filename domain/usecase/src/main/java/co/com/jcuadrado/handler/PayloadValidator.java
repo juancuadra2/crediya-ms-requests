@@ -16,8 +16,8 @@ public class PayloadValidator {
         if (creditRequest.getAmount() == null) {
             return Mono.error(new BusinessException(CreditRequestConstants.AMOUNT_REQUIRED, ErrorCode.BAD_REQUEST));
         }
-        if (creditRequest.getLimitDate() == null) {
-            return Mono.error(new BusinessException(CreditRequestConstants.LIMIT_DATE_REQUIRED, ErrorCode.BAD_REQUEST));
+        if (creditRequest.getTerm() == null) {
+            return Mono.error(new BusinessException(CreditRequestConstants.TERM_REQUIRED, ErrorCode.BAD_REQUEST));
         }
         if (creditRequest.getDocumentNumber() == null) {
             return Mono.error(new BusinessException(CreditRequestConstants.DOCUMENT_NUMBER_REQUIRED, ErrorCode.BAD_REQUEST));

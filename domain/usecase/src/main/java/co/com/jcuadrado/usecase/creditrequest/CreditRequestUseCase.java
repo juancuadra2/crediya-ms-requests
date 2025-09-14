@@ -2,7 +2,7 @@ package co.com.jcuadrado.usecase.creditrequest;
 
 import co.com.jcuadrado.constant.CreditStatusEnum;
 import co.com.jcuadrado.handler.*;
-import co.com.jcuadrado.model.auth.AuthResponse;
+import co.com.jcuadrado.model.auth.AuthInfo;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import co.com.jcuadrado.model.creditrequest.gateways.CreditRequestRepository;
 import co.com.jcuadrado.usecase.creditstatus.CreditStatusUseCase;
@@ -15,15 +15,15 @@ public record CreditRequestUseCase(
         CreditStatusUseCase creditStatusUseCase, CreditTypeUseCase creditTypeUseCase,
         UserUseCase userUseCase) {
 
-    public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest, AuthResponse authResponse) {
-        creditRequest.setStatus(CreditStatusEnum.PENDING.getDescription());
-        return validateCreditRequest(creditRequest, authResponse)
+    public Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest, AuthInfo authInfo) {
+        creditRequest.setStatus(CreditStatusEnum.PENDING.name());
+        return validateCreditRequest(creditRequest, authInfo)
                 .flatMap(creditRequestRepository::saveCreditRequest);
     }
 
-    private Mono<CreditRequest> validateCreditRequest(CreditRequest creditRequest, AuthResponse authResponse) {
+    private Mono<CreditRequest> validateCreditRequest(CreditRequest creditRequest, AuthInfo authInfo) {
         return PayloadValidator.validate(creditRequest)
-                .flatMap(cr1 -> UserValidator.validateAndSetEmail(creditRequest, userUseCase, authResponse))
+                .flatMap(cr1 -> UserValidator.validateAndSetInfo(creditRequest, userUseCase, authInfo))
                 .flatMap(cr2 -> CreditStatusValidator.validateAndSetId(creditRequest, creditStatusUseCase))
                 .flatMap(cr3 -> CreditTypeValidator.validateAndSetId(creditRequest, creditTypeUseCase));
     }

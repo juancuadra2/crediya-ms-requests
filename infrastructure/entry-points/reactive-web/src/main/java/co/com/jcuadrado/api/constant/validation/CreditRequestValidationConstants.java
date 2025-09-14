@@ -12,9 +12,8 @@ public final class CreditRequestValidationConstants {
     public static final String AMOUNT_MIN_VALUE = "1";
     
     // Limit date validation constants
-    public static final String LIMIT_DATE_NOT_NULL_MESSAGE = "La fecha límite es requerida";
-    public static final String LIMIT_DATE_FUTURE_MESSAGE = "La fecha límite debe ser futura";
-    
+    public static final String TERM_NOT_NULL_MESSAGE = "El plazo es requerido";
+
     // Document number validation constants
     public static final String DOCUMENT_NUMBER_NOT_BLANK_MESSAGE = "El número de documento es requerido";
     public static final String DOCUMENT_NUMBER_PATTERN_MESSAGE = "El número de documento debe tener un formato válido";

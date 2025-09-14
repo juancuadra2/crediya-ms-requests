@@ -26,14 +26,14 @@ class CreditStatusValidatorTest {
     void validateSuccess() {
         CreditStatus creditStatus = CreditStatus.builder()
                 .id("ID-123")
-                .name(CreditStatusEnum.PENDING.getDescription())
+                .name(CreditStatusEnum.PENDING.name())
                 .build();
 
         CreditRequest creditRequest = CreditRequest.builder()
-                .status(CreditStatusEnum.PENDING.getDescription())
+                .status(CreditStatusEnum.PENDING.name())
                 .build();
 
-        when(creditStatusUseCase.getCreditStatusByName(CreditStatusEnum.PENDING.getDescription())).thenReturn(Mono.just(creditStatus));
+        when(creditStatusUseCase.getCreditStatusByName(CreditStatusEnum.PENDING.name())).thenReturn(Mono.just(creditStatus));
 
 
         Mono<CreditRequest> creditRequestMono = CreditStatusValidator.validateAndSetId(creditRequest, creditStatusUseCase);
@@ -45,7 +45,7 @@ class CreditStatusValidatorTest {
                 })
                 .verifyComplete();
 
-        verify(creditStatusUseCase).getCreditStatusByName(CreditStatusEnum.PENDING.getDescription());
+        verify(creditStatusUseCase).getCreditStatusByName(CreditStatusEnum.PENDING.name());
     }
 
 
