@@ -16,7 +16,11 @@ public class CreditRequestResultDTO {
     private UUID id;
     private BigDecimal amount;
     private Integer term;
+    private String documentNumber;
+    private String fullName;
     private String email;
+    private BigDecimal baseSalary;
     private String statusName;
     private String typeName;
+    private BigDecimal interestRate;
 }

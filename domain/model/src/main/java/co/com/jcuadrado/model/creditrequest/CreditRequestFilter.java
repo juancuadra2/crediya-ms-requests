@@ -14,5 +14,4 @@ public class CreditRequestFilter {
     private int size;
     private String filter;
     private String status;
-    private String email;
 }

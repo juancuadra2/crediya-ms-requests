@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public enum RoleEnum {
     ADMIN,
-    ADVISOR,
+    ADVISER,
     CLIENT
 }

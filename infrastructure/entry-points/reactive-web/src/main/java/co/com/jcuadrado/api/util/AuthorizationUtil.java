@@ -8,10 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -31,13 +29,22 @@ public class AuthorizationUtil {
                 );
     }
 
-    public static Mono<ServerResponse> requireAnyRole(String[] allowedRoles, Mono<ServerResponse> response) {
+    public static Mono<Boolean> requireAnyRole(Set<String> allowedRoles) {
         return getCurrentUserRoles()
-                .switchIfEmpty(Mono.error(new AuthException(AuthException.ErrorType.FORBIDDEN, AuthConstants.USER_NOT_AUTHENTICATED_ERROR)))
-                .flatMap(userRoles -> {
-                    boolean hasRequiredRole = Arrays.stream(allowedRoles).anyMatch(userRoles::contains);
-                    if (hasRequiredRole) return response;
-                    return Mono.error(new AuthException(AuthException.ErrorType.FORBIDDEN, AuthConstants.ACCESS_DENIED_ERROR));
+                .switchIfEmpty(Mono.error(new AuthException(
+                        AuthException.ErrorType.FORBIDDEN,
+                        AuthConstants.USER_NOT_AUTHENTICATED_ERROR)))
+                .flatMap(currentUserRoles -> {
+                    boolean hasRequiredRole = allowedRoles.stream()
+                            .anyMatch(currentUserRoles::contains);
+
+                    if (hasRequiredRole) {
+                        return Mono.just(true);
+                    }
+                    return Mono.error(new AuthException(
+                            AuthException.ErrorType.FORBIDDEN,
+                            AuthConstants.ACCESS_DENIED_ERROR));
                 });
     }
+
 }

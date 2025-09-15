@@ -11,6 +11,7 @@ import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.annotation.NonNull;
 
 import java.util.UUID;
 
@@ -42,21 +43,26 @@ public class RequestReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
     @Override
     public Mono<PageResponse<CreditRequestResponse>> findCreditRequests(CreditRequestFilter filter) {
+        String filterString = filter.getFilter() == null ? "" : filter.getFilter();
         int size = filter.getSize() == 0 ? 10 : filter.getSize();
         int page = filter.getPage() == 0 ? 0 : filter.getPage() - 1;
-        Mono<Long> total = repository.countCreditRequests();
-        Flux<CreditRequestResponse> results = getResults(size, page);
+        Mono<Long> total = repository.countCreditRequests(filterString, filter.getStatus());
+        Flux<CreditRequestResponse> results = getResults(size, page, filterString, filter.getStatus());
         return toPageResponse(total, results, page, size);
     }
 
-    private Flux<CreditRequestResponse> getResults(int size, int page) {
-        return repository.findCreditRequests(size, page).map(proj -> CreditRequestResponse.builder()
+    private Flux<CreditRequestResponse> getResults(int size, int page, @NonNull String filter, String status) {
+        return repository.findCreditRequests(size, page, filter, status).map(proj -> CreditRequestResponse.builder()
                 .id(proj.getId().toString())
                 .amount(proj.getAmount())
                 .term(proj.getTerm())
+                .documentNumber(proj.getDocumentNumber())
+                .fullName(proj.getFullName())
+                .baseSalary(proj.getBaseSalary())
                 .email(proj.getEmail())
                 .status(proj.getStatusName())
                 .creditType(proj.getTypeName())
+                .interestRate(proj.getInterestRate())
                 .build()
         );
     }
