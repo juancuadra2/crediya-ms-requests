@@ -1,0 +1,85 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: "CrediYaMsRequests"
+  devtools:
+    add-properties: false
+    restart:
+      enabled: false
+  h2:
+    console:
+      enabled: false
+  kafka:
+    consumer:
+      bootstrap-servers: "${KAFKA_BOOTSTRAP_SERVERS:kafka:29092}"
+      group-id: "${KAFKA_GROUP_ID:CrediYaMsRequests-docker}"
+      auto-offset-reset: "earliest"
+
+adapters:
+  r2dbc:
+    host: "${DB_HOST:postgres-requests}"
+    port: ${DB_PORT:5432}
+    database: "${DB_NAME:crediya_requests}"
+    schema: "public"
+    username: "${DB_USERNAME:jcuadrado_requests}"
+    password: "${DB_PASSWORD:jcuadrado_requests}"
+  kafka:
+    consumer:
+      topic: "dbserver1.public.users"
+      auto-offset-reset: "earliest"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: "when-authorized"
+  health:
+    circuitbreakers:
+      enabled: true
+
+cors:
+  allowed-origins: "http://localhost:4200,http://frontend:3000,http://gateway:8080"
+
+adapter:
+  restconsumer:
+    timeout: 5000
+    url: "${USERS_SERVICE_URL:http://crediya-ms-auth:8080}"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getUserByDocumentNumber:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+
+security:
+  jwt:
+    secret: "${JWT_SECRET:defaultSecretForDocker}"
+
+logging:
+  level:
+    root: "INFO"
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%X{traceId:-},%X{spanId:-}] %logger{40} - %msg%n"
+
+# Docker optimizations
+debug: false
+trace: false
+
+# JVM optimizations for containers
+java:
+  jvm:
+    options: "-XX:+UseContainerSupport -XX:MaxRAMPercentage=70.0"
