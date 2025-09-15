@@ -16,5 +16,9 @@ public final class SecurityConfigConstants {
     public static final String UNAUTHORIZED_DESCRIPTION = "Token de autenticación inválido o ausente";
     public static final String UNAUTHORIZED_EXAMPLE_NAME = "unauthorized_error";
     public static final String UNAUTHORIZED_EXAMPLE_SUMMARY = "Error de autenticación";
-    public static final String UNAUTHORIZED_EXAMPLE_VALUE = "{\n  \"timestamp\": \"2024-01-15T10:30:00Z\",\n  \"status\": 401,\n  \"error\": \"Unauthorized\",\n  \"message\": \"Token de autenticación inválido o ausente\",\n  \"path\": \"/api/v1/credit-requests\"\n}";
+
+    // Authorization Error Messages
+    public static final String FORBIDDEN_DESCRIPTION = "Acceso denegado. El usuario no tiene permisos suficientes";
+    public static final String FORBIDDEN_EXAMPLE_NAME = "forbidden_error";
+    public static final String FORBIDDEN_EXAMPLE_SUMMARY = "Error de autorización";
 }
