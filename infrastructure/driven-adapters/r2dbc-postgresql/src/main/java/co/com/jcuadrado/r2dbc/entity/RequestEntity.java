@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -20,7 +19,7 @@ public class RequestEntity {
     @Id
     private UUID id;
     private BigDecimal amount;
-    private LocalDate limitDate;
+    private Integer term;
     private String email;
     private UUID typeId;
     private UUID statusId;

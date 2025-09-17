@@ -2,7 +2,6 @@ package co.com.jcuadrado.model.creditrequest;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -11,7 +10,7 @@ import java.time.LocalDate;
 public class CreditRequest {
     private String id;
     private BigDecimal amount;
-    private LocalDate limitDate;
+    private Integer term;
     private String documentNumber;
     private String email;
     private String status;

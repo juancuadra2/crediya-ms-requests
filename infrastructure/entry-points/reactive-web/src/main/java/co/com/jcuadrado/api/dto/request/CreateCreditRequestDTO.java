@@ -8,7 +8,6 @@ import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Builder(toBuilder = true)
 @Schema(description = CreditRequestDtoConstants.CREATE_CREDIT_REQUEST_DESCRIPTION)
@@ -21,11 +20,11 @@ public record CreateCreditRequestDTO(
         @DecimalMin(value = CreditRequestValidationConstants.AMOUNT_MIN_VALUE, message = CreditRequestValidationConstants.AMOUNT_MIN_MESSAGE)
         BigDecimal amount,
 
-        @Schema(description = CreditRequestDtoConstants.LIMIT_DATE_DESCRIPTION,
-                example = CreditRequestDtoConstants.LIMIT_DATE_EXAMPLE)
-        @NotNull(message = CreditRequestValidationConstants.LIMIT_DATE_NOT_NULL_MESSAGE)
-        @Future(message = CreditRequestValidationConstants.LIMIT_DATE_FUTURE_MESSAGE)
-        LocalDate limitDate,
+        @Schema(description = CreditRequestDtoConstants.TERM_DESCRIPTION,
+                example = CreditRequestDtoConstants.TERM_EXAMPLE)
+        @NotNull(message = CreditRequestValidationConstants.TERM_NOT_NULL_MESSAGE)
+        @Min(1)
+        Integer term,
 
         @Schema(description = CreditRequestDtoConstants.DOCUMENT_NUMBER_DESCRIPTION,
                 example = CreditRequestDtoConstants.DOCUMENT_NUMBER_EXAMPLE,

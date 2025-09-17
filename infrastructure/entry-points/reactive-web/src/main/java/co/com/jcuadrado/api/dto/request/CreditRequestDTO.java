@@ -4,7 +4,6 @@ import co.com.jcuadrado.api.constant.doc.CreditRequestDtoConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Schema(description = CreditRequestDtoConstants.CREDIT_REQUEST_RESPONSE_DESCRIPTION)
 public record CreditRequestDTO(
@@ -13,9 +12,9 @@ public record CreditRequestDTO(
                 example = CreditRequestDtoConstants.AMOUNT_EXAMPLE)
         BigDecimal amount,
         
-        @Schema(description = CreditRequestDtoConstants.LIMIT_DATE_DESCRIPTION,
-                example = CreditRequestDtoConstants.LIMIT_DATE_EXAMPLE)
-        LocalDate limitDate,
+        @Schema(description = CreditRequestDtoConstants.TERM_DESCRIPTION,
+                example = CreditRequestDtoConstants.TERM_EXAMPLE)
+        Integer term,
         
         @Schema(description = CreditRequestDtoConstants.DOCUMENT_NUMBER_DESCRIPTION,
                 example = CreditRequestDtoConstants.DOCUMENT_NUMBER_EXAMPLE)

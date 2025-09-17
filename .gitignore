@@ -335,4 +335,5 @@ gradle-app.setting
 *.hprof
 build-cache
 
-.vscode/
+.vscode
+/.vscode/
