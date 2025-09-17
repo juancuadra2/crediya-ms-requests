@@ -1,11 +1,13 @@
-package co.com.jcuadrado.api.dto.request;
+package co.com.jcuadrado.api.dto.response;
 
 import co.com.jcuadrado.api.constant.doc.CreditRequestDtoConstants;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
 @Schema(description = CreditRequestDtoConstants.CREDIT_REQUEST_RESPONSE_DESCRIPTION)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record CreditRequestDTO(
         
         @Schema(description = CreditRequestDtoConstants.AMOUNT_DESCRIPTION,

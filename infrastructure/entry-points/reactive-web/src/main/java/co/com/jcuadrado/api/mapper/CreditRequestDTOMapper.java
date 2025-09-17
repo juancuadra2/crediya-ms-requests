@@ -4,7 +4,7 @@ import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-import co.com.jcuadrado.api.dto.request.CreditRequestDTO;
+import co.com.jcuadrado.api.dto.response.CreditRequestDTO;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import reactor.core.publisher.Mono;
 
