@@ -25,18 +25,14 @@ public class AuthService {
 
     public Mono<Boolean> requireAnyRole(Set<String> allowedRoles) {
         return getCurrentUserRoles()
-                .switchIfEmpty(Mono.error(new AuthException(
-                        AuthException.ErrorType.FORBIDDEN,
-                        AuthConstants.USER_NOT_AUTHENTICATED_ERROR)))
+                .switchIfEmpty(Mono.error(new AuthException(AuthException.ErrorType.FORBIDDEN, AuthConstants.USER_NOT_AUTHENTICATED_ERROR)))
                 .flatMap(currentUserRoles -> {
                     boolean hasRequiredRole = AuthUtil.hasAnyRole(currentUserRoles, allowedRoles);
 
                     if (hasRequiredRole) {
                         return Mono.just(true);
                     }
-                    return Mono.error(new AuthException(
-                            AuthException.ErrorType.FORBIDDEN,
-                            AuthConstants.ACCESS_DENIED_ERROR));
+                    return Mono.error(new AuthException(AuthException.ErrorType.FORBIDDEN, AuthConstants.ACCESS_DENIED_ERROR));
                 });
     }
 

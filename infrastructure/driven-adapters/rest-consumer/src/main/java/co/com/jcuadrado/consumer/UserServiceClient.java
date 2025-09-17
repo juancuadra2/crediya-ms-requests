@@ -6,6 +6,7 @@ import co.com.jcuadrado.model.user.User;
 import co.com.jcuadrado.model.user.gateways.UserRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -20,10 +21,12 @@ public class UserServiceClient implements UserRepository {
     @Override
     @CircuitBreaker(name = UserServiceClientConstants.USER_SERVICE_CIRCUIT_BREAKER_NAME)
     public Mono<User> getUserByDocumentNumber(String documentNumber, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
         return client
                 .get()
                 .uri(UserServiceClientConstants.USER_BY_DOCUMENT_NUMBER_URI, documentNumber)
-                .header("Authorization", "Bearer " + token)
+                .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .retrieve()
                 .bodyToMono(User.class)
                 .onErrorResume(WebClientResponseException.NotFound.class,

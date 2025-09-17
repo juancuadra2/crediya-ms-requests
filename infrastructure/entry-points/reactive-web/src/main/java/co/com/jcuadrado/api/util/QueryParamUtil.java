@@ -1,5 +1,6 @@
 package co.com.jcuadrado.api.util;
 
+import co.com.jcuadrado.api.constant.util.QueryParamConstants;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -26,8 +27,8 @@ public class QueryParamUtil {
     }
 
     public static <T> T getParams(ServerRequest serverRequest, Class<T> clazz) {
-        Objects.requireNonNull(serverRequest, "ServerRequest cannot be null");
-        Objects.requireNonNull(clazz, "Class cannot be null");
+        Objects.requireNonNull(serverRequest, QueryParamConstants.SERVER_REQUEST_CANNOT_BE_NULL);
+        Objects.requireNonNull(clazz, QueryParamConstants.CLASS_CANNOT_BE_NULL);
 
         try {
             MultiValueMap<String, String> queryParams = serverRequest.queryParams();
@@ -40,7 +41,7 @@ public class QueryParamUtil {
             return OBJECT_MAPPER.convertValue(map, clazz);
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to convert query parameters to " + clazz.getSimpleName() + ": " + e.getMessage(), e);
+            throw new RuntimeException(String.format(QueryParamConstants.FAILED_CONVERT_QUERY_PARAMS, clazz.getSimpleName(), e.getMessage()), e);
         }
     }
 
