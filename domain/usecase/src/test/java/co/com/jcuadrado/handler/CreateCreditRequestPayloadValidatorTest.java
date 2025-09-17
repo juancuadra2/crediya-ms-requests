@@ -10,7 +10,7 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 
-class PayloadValidatorTest {
+class CreateCreditRequestPayloadValidatorTest {
 
     @Test
     void testSuccess() {
@@ -22,7 +22,7 @@ class PayloadValidatorTest {
                 .creditType("PERSONAL")
                 .build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectNext(creditRequest)
@@ -31,7 +31,7 @@ class PayloadValidatorTest {
 
     @Test
     void testFailCreditRequestNull() {
-        Mono<CreditRequest> result = PayloadValidator.validate(null);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(null);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
@@ -45,7 +45,7 @@ class PayloadValidatorTest {
     void testFailAmountNull() {
         CreditRequest creditRequest = CreditRequest.builder().build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
@@ -61,7 +61,7 @@ class PayloadValidatorTest {
                 .amount(BigDecimal.TEN)
                 .build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
@@ -78,7 +78,7 @@ class PayloadValidatorTest {
                 .term(12)
                 .build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
@@ -96,7 +96,7 @@ class PayloadValidatorTest {
                 .documentNumber("123456789")
                 .build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {
@@ -115,7 +115,7 @@ class PayloadValidatorTest {
                 .status(CreditStatusEnum.PENDING.name())
                 .build();
 
-        Mono<CreditRequest> result = PayloadValidator.validate(creditRequest);
+        Mono<CreditRequest> result = CreateCreditRequestPayloadValidator.validate(creditRequest);
 
         StepVerifier.create(result)
                 .expectErrorMatches(error -> {

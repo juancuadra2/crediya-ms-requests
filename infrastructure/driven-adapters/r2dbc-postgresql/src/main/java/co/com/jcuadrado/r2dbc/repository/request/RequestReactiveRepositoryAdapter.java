@@ -51,6 +51,13 @@ public class RequestReactiveRepositoryAdapter extends ReactiveAdapterOperations<
         return toPageResponse(total, results, page, size);
     }
 
+    @Override
+    public Mono<CreditRequest> updateCreditRequestStatus(CreditRequest creditRequest) {
+        UUID creditRequestId = UUID.fromString(creditRequest.getId());
+        UUID statusId = UUID.fromString(creditRequest.getStatus());
+        return super.repository.updateStatusById(creditRequestId, statusId).map(this::toEntity);
+    }
+
     private Flux<CreditRequestResponse> getResults(int size, int page, @NonNull String filter, String status) {
         return repository.findCreditRequests(size, page, filter, status).map(proj -> CreditRequestResponse.builder()
                 .id(proj.getId().toString())

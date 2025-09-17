@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class PayloadValidator {
+public class CreateCreditRequestPayloadValidator {
     public static Mono<CreditRequest> validate(CreditRequest creditRequest){
         if (creditRequest == null) {
             return Mono.error(new BusinessException(CreditRequestConstants.CREDIT_REQUEST_NOT_NULL, ErrorCode.BAD_REQUEST));

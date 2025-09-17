@@ -64,4 +64,7 @@ public interface RequestReactiveRepository extends ReactiveCrudRepository<Reques
             )
             """)
     Mono<Long> countCreditRequests(@Param("filter") String filter, @Param("status") String status);
+
+    @Query("UPDATE requests SET status_id = :statusId WHERE id = :id RETURNING *")
+    Mono<RequestEntity> updateStatusById(@Param("id") UUID id, @Param("statusId") UUID statusId);
 }

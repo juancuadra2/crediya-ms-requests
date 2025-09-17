@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public record CreditRequestListUseCase(CreditRequestRepository creditRequestRepository) {
+public record GetCreditRequestUseCase(CreditRequestRepository creditRequestRepository) {
 
     public Mono<PageResponse<CreditRequestResponse>> getCreditRequests(CreditRequestFilter filter, AuthInfo authInfo) {
         if (!authInfo.getRole().equals(RoleEnum.ADVISER.name())) {

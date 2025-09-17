@@ -1,18 +1,22 @@
-package co.com.jcuadrado.api.util;
+package co.com.jcuadrado.api.services;
 
 import co.com.jcuadrado.api.exception.ValidationException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public final class ValidationUtil {
+@Component
+@RequiredArgsConstructor
+public class ValidationService {
 
-    public static <T> Mono<Void> validateOrThrow(Validator validator, T dto) {
+    private final Validator validator;
+
+    public <T> Mono<Void> validateOrThrow(T dto) {
         Set<ConstraintViolation<T>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {
             Set<String> errorMessages = violations.stream()
@@ -22,4 +26,5 @@ public final class ValidationUtil {
         }
         return Mono.empty();
     }
+
 }

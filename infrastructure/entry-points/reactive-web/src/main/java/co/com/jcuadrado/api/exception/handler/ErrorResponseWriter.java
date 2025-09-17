@@ -2,6 +2,7 @@ package co.com.jcuadrado.api.exception.handler;
 
 import co.com.jcuadrado.api.constant.error.LogMessages;
 import co.com.jcuadrado.api.dto.ErrorResponseDTO;
+import co.com.jcuadrado.api.util.ResponseUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ErrorResponseWriter {
         response.setStatusCode(status);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ErrorResponseDTO errorResponse = buildErrorResponse(messages, status);
+        ErrorResponseDTO errorResponse = ResponseUtil.buildErrorResponse(messages, status);
         try {
             String jsonResponse = objectMapper.writeValueAsString(errorResponse);
             DataBuffer buffer = response.bufferFactory()
@@ -37,13 +38,5 @@ public class ErrorResponseWriter {
             log.error(LogMessages.SERIALIZATION_EXCEPTION_MESSAGE, e);
             return response.setComplete();
         }
-    }
-
-    private ErrorResponseDTO buildErrorResponse(Set<String> messages, HttpStatus status) {
-        return ErrorResponseDTO.builder()
-                .messages(messages)
-                .error(status.name())
-                .status(String.valueOf(status.value()))
-                .build();
     }
 }

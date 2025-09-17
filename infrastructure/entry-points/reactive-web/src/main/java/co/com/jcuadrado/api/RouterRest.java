@@ -14,8 +14,13 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class RouterRest {
 
     @Bean
-    public RouterFunction<ServerResponse> routerFunction(Handler handler) {
-        return route(POST(EndpointConstants.REQUEST_API_PATH).and(accept(MediaType.APPLICATION_JSON)), handler::listenSaveRequest)
-                .andRoute(GET(EndpointConstants.REQUEST_API_PATH).and(accept(MediaType.APPLICATION_JSON)), handler::listenGetRequests);
+    public RouterFunction<ServerResponse> routerFunction(
+            UpdateCreditRequestHandler updateCreditRequestHandler,
+            CreateCreditRequestHandler createCreditRequestHandler,
+            GetCreditRequestHandler getCreditRequestHandler
+    ) {
+        return route(POST(EndpointConstants.REQUEST_API_PATH).and(accept(MediaType.APPLICATION_JSON)), createCreditRequestHandler::listenSaveRequest)
+                .andRoute(GET(EndpointConstants.REQUEST_API_PATH).and(accept(MediaType.APPLICATION_JSON)), getCreditRequestHandler::listenGetRequests)
+                .andRoute(PUT(EndpointConstants.REQUEST_API_PATH  + "/{id}").and(accept(MediaType.APPLICATION_JSON)), updateCreditRequestHandler::listenUpdateRequest);
     }
 }

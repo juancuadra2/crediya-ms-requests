@@ -10,7 +10,7 @@ import co.com.jcuadrado.usecase.credittype.CreditTypeUseCase;
 import co.com.jcuadrado.usecase.user.UserUseCase;
 import reactor.core.publisher.Mono;
 
-public record CreditRequestUseCase(
+public record CreateCreditRequestUseCase(
         CreditRequestRepository creditRequestRepository,
         CreditStatusUseCase creditStatusUseCase, CreditTypeUseCase creditTypeUseCase,
         UserUseCase userUseCase) {
@@ -22,7 +22,7 @@ public record CreditRequestUseCase(
     }
 
     private Mono<CreditRequest> validateCreditRequest(CreditRequest creditRequest, AuthInfo authInfo) {
-        return PayloadValidator.validate(creditRequest)
+        return CreateCreditRequestPayloadValidator.validate(creditRequest)
                 .flatMap(cr1 -> UserValidator.validateAndSetInfo(creditRequest, userUseCase, authInfo))
                 .flatMap(cr2 -> CreditStatusValidator.validateAndSetId(creditRequest, creditStatusUseCase))
                 .flatMap(cr3 -> CreditTypeValidator.validateAndSetId(creditRequest, creditTypeUseCase));

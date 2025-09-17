@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 @ExtendWith(MockitoExtension.class)
-class CreditRequestUseCaseTest {
+class CreateCreditRequestUseCaseTest {
 
     @Mock
     private CreditRequestRepository creditRequestRepository;
@@ -40,7 +40,7 @@ class CreditRequestUseCaseTest {
     private CreditTypeUseCase creditTypeUseCase;
 
     @InjectMocks
-    private CreditRequestUseCase creditRequestUseCase;
+    private CreateCreditRequestUseCase createCreditRequestUseCase;
 
     @Test
     void testSaveCreditRequest() {
@@ -79,7 +79,7 @@ class CreditRequestUseCaseTest {
 
         when(creditRequestRepository.saveCreditRequest(creditRequest)).thenReturn(Mono.just(creditRequest));
 
-        Mono<CreditRequest> result = creditRequestUseCase.saveCreditRequest(creditRequest, authInfo);
+        Mono<CreditRequest> result = createCreditRequestUseCase.saveCreditRequest(creditRequest, authInfo);
 
         StepVerifier.create(result)
                 .expectNext(creditRequest)

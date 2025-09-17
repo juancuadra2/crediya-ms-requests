@@ -12,4 +12,5 @@ public class CreditRequestConstants {
     public static final String CREDIT_TYPE_REQUIRED = "Credit Type es requerido";
     public static final String AMOUNT_MIN_VALUE = "El monto debe ser mayor a %s";
     public static final String AMOUNT_MAX_VALUE = "El monto debe ser menor a %s";
+    public static final String ID_REQUIRED = "El id de la solicitud es requerido";
 }
