@@ -1,9 +1,9 @@
-package co.com.jcuadrado.handler;
+package co.com.jcuadrado.service;
 
 import co.com.jcuadrado.constant.CreditStatusEnum;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import co.com.jcuadrado.model.creditstatus.CreditStatus;
-import co.com.jcuadrado.usecase.creditstatus.CreditStatusUseCase;
+import co.com.jcuadrado.model.creditstatus.gateways.CreditStatusRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,10 +17,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CreditStatusValidatorTest {
+class CreditStatusServiceTest {
 
     @Mock
-    private CreditStatusUseCase creditStatusUseCase;
+    private CreditStatusRepository creditStatusRepository;
 
     @Test
     void validateSuccess() {
@@ -33,10 +33,10 @@ class CreditStatusValidatorTest {
                 .status(CreditStatusEnum.PENDING.name())
                 .build();
 
-        when(creditStatusUseCase.getCreditStatusByName(CreditStatusEnum.PENDING.name())).thenReturn(Mono.just(creditStatus));
+        when(creditStatusRepository.getCreditStatusByName(CreditStatusEnum.PENDING.name())).thenReturn(Mono.just(creditStatus));
 
 
-        Mono<CreditRequest> creditRequestMono = CreditStatusValidator.validateAndSetId(creditRequest, creditStatusUseCase);
+        Mono<CreditRequest> creditRequestMono = CreditStatusService.validateAndSetId(creditRequest, creditStatusRepository);
 
         StepVerifier.create(creditRequestMono)
                 .assertNext(updatedCreditRequest -> {
@@ -45,7 +45,7 @@ class CreditStatusValidatorTest {
                 })
                 .verifyComplete();
 
-        verify(creditStatusUseCase).getCreditStatusByName(CreditStatusEnum.PENDING.name());
+        verify(creditStatusRepository).getCreditStatusByName(CreditStatusEnum.PENDING.name());
     }
 
 

@@ -5,7 +5,11 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 
+import co.com.jcuadrado.constant.RoleEnum;
 import co.com.jcuadrado.model.auth.AuthInfo;
+import co.com.jcuadrado.model.creditstatus.gateways.CreditStatusRepository;
+import co.com.jcuadrado.model.credittype.gateways.CreditTypeRepository;
+import co.com.jcuadrado.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,9 +22,6 @@ import co.com.jcuadrado.model.creditrequest.gateways.CreditRequestRepository;
 import co.com.jcuadrado.model.creditstatus.CreditStatus;
 import co.com.jcuadrado.model.credittype.CreditType;
 import co.com.jcuadrado.model.user.User;
-import co.com.jcuadrado.usecase.creditstatus.CreditStatusUseCase;
-import co.com.jcuadrado.usecase.credittype.CreditTypeUseCase;
-import co.com.jcuadrado.usecase.user.UserUseCase;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -31,13 +32,13 @@ class CreateCreditRequestUseCaseTest {
     private CreditRequestRepository creditRequestRepository;
 
     @Mock
-    private UserUseCase userUseCase;
+    private UserRepository userRepository;
 
     @Mock
-    private CreditStatusUseCase creditStatusUseCase;
+    private CreditStatusRepository creditStatusRepository;
 
     @Mock
-    private CreditTypeUseCase creditTypeUseCase;
+    private CreditTypeRepository creditTypeRepository;
 
     @InjectMocks
     private CreateCreditRequestUseCase createCreditRequestUseCase;
@@ -46,12 +47,12 @@ class CreateCreditRequestUseCaseTest {
     void testSaveCreditRequest() {
         AuthInfo authInfo = AuthInfo.builder()
                 .token("Token")
-                .email("admin@mail.com")
-                .role("ADMIN")
+                .email("test@example.com")
+                .role(RoleEnum.CLIENT.name())
                 .build();
 
         CreditRequest creditRequest = CreditRequest.builder()
-                .amount(new BigDecimal("1000"))
+                .amount(new BigDecimal(500000))
                 .term(12)
                 .documentNumber("123456789")
                 .email("test@example.com")
@@ -59,21 +60,23 @@ class CreateCreditRequestUseCaseTest {
                 .status(CreditStatusEnum.PENDING.name())
                 .build();
 
-        when(userUseCase.getUserByDocumentNumber(creditRequest.getDocumentNumber(), authInfo.getToken()))
+        when(userRepository.getUserByDocumentNumber(creditRequest.getDocumentNumber(), authInfo.getToken()))
                 .thenReturn(Mono.just(User.builder()
                         .documentNumber(creditRequest.getDocumentNumber())
                         .email(creditRequest.getEmail())
                         .build()));
 
-        when(creditStatusUseCase.getCreditStatusByName(creditRequest.getStatus()))
+        when(creditStatusRepository.getCreditStatusByName(creditRequest.getStatus()))
                 .thenReturn(Mono.just(CreditStatus.builder()
                         .id("status-id-123")
                         .name(CreditStatusEnum.PENDING.name())
                         .build()));
 
-        when(creditTypeUseCase.getCreditTypeByName(creditRequest.getCreditType()))
+        when(creditTypeRepository.getCreditTypeByName(creditRequest.getCreditType()))
                 .thenReturn(Mono.just(CreditType.builder()
                         .id("type-id-123")
+                        .minAmount(BigDecimal.valueOf(100000))
+                        .maxAmount(BigDecimal.valueOf(1000000))
                         .name(creditRequest.getCreditType())
                         .build()));
 
@@ -86,6 +89,6 @@ class CreateCreditRequestUseCaseTest {
                 .verifyComplete();
 
         verify(creditRequestRepository).saveCreditRequest(creditRequest);
-        verify(userUseCase).getUserByDocumentNumber(creditRequest.getDocumentNumber(), authInfo.getToken());
+        verify(userRepository).getUserByDocumentNumber(creditRequest.getDocumentNumber(), authInfo.getToken());
     }
 }

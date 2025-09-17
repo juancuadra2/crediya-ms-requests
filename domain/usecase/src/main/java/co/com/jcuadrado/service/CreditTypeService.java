@@ -1,18 +1,20 @@
-package co.com.jcuadrado.handler;
+package co.com.jcuadrado.service;
 
 import co.com.jcuadrado.constant.CreditRequestConstants;
+import co.com.jcuadrado.constant.CreditTypeConstants;
 import co.com.jcuadrado.constant.ErrorCode;
 import co.com.jcuadrado.exception.BusinessException;
 import co.com.jcuadrado.model.creditrequest.CreditRequest;
-import co.com.jcuadrado.usecase.credittype.CreditTypeUseCase;
+import co.com.jcuadrado.model.credittype.gateways.CreditTypeRepository;
 import lombok.NoArgsConstructor;
 import reactor.core.publisher.Mono;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class CreditTypeValidator {
+public class CreditTypeService {
 
-    public static Mono<CreditRequest> validateAndSetId(CreditRequest creditRequest, CreditTypeUseCase creditTypeUseCase) {
-        return creditTypeUseCase.getCreditTypeByName(creditRequest.getCreditType())
+    public static Mono<CreditRequest> validateAndSetId(CreditRequest creditRequest, CreditTypeRepository creditTypeRepository) {
+        return creditTypeRepository.getCreditTypeByName(creditRequest.getCreditType())
+                .switchIfEmpty(Mono.error(new BusinessException(CreditTypeConstants.CREDIT_TYPE_NOT_FOUND, ErrorCode.NOT_FOUND)))
                 .flatMap(creditType -> {
                     if (creditRequest.getAmount().compareTo(creditType.getMinAmount()) < 0) {
                         return Mono.error(new BusinessException(
