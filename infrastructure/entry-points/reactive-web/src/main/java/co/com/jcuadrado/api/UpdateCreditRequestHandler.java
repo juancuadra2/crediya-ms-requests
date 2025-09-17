@@ -2,6 +2,7 @@ package co.com.jcuadrado.api;
 
 import co.com.jcuadrado.api.constant.api.SuccessHttpStatus;
 import co.com.jcuadrado.api.constant.auth.AuthRoles;
+import co.com.jcuadrado.api.constant.validation.CreditRequestValidationConstants;
 import co.com.jcuadrado.api.dto.request.ChangeStatusCreditRequestDto;
 import co.com.jcuadrado.api.services.AuthService;
 import co.com.jcuadrado.api.services.BaseRequestService;
@@ -28,9 +29,9 @@ public class UpdateCreditRequestHandler {
     private final BaseRequestService baseRequestService;
     private final AuthService authService;
 
-    public Mono<ServerResponse> listenUpdateRequest(ServerRequest serverRequest) {
+    public Mono<ServerResponse> listenChangeStatusRequest(ServerRequest serverRequest) {
         String requestId = serverRequest.pathVariable("id");
-        if (requestId.isBlank()) return Mono.error(new ValidationException("Invalid request ID"));
+        if (requestId.isBlank()) return Mono.error(new ValidationException(CreditRequestValidationConstants.ID_REQUIRED_MESSAGE));
 
         return authService.requireAnyRole(Set.of(AuthRoles.ADVISER.name()))
                 .then(baseRequestService.extractAndValidateRequest(serverRequest, ChangeStatusCreditRequestDto.class))

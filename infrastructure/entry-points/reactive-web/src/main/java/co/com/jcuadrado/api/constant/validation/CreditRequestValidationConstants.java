@@ -20,4 +20,8 @@ public final class CreditRequestValidationConstants {
     
     // Credit type validation constants
     public static final String CREDIT_TYPE_NOT_BLANK_MESSAGE = "El tipo de crédito es requerido";
+
+    public static final String STATUS_REQUIRED_MESSAGE = "El estado es requerido";
+
+    public static final String ID_REQUIRED_MESSAGE = "El id es requerido";
 }

@@ -103,20 +103,4 @@ public final class ExampleConstants {
               "totalPages": 1
             }
             """;
-
-    public static final String CREDIT_REQUEST_RESPONSE_DETAIL_EXAMPLE = """
-            {
-              "id": "123e4567-e89b-12d3-a456-426614174000",
-              "amount": 1500000.00,
-              "term": 12,
-              "documentNumber": "12345678",
-              "fullName": "Juan Carlos Pérez López",
-              "email": "juan.perez@email.com",
-              "status": "PENDING",
-              "creditType": "PERSONAL",
-              "interestRate": 1.2,
-              "baseSalary": 3500000.00,
-              "monthlyPayment": 145000.00
-            }
-            """;
 }

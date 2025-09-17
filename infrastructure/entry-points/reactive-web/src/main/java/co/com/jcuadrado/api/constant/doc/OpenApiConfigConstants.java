@@ -51,8 +51,6 @@ public final class OpenApiConfigConstants {
     public static final String PARAM_IN_QUERY = "query";
     
     // Parameter Default Values and Examples
-    public static final Integer PAGE_DEFAULT_VALUE = 1;
-    public static final Integer SIZE_DEFAULT_VALUE = 10;
     public static final Integer PAGE_EXAMPLE = 1;
     public static final Integer SIZE_EXAMPLE = 10;
     public static final String FILTER_EXAMPLE = "Juan Pérez";
