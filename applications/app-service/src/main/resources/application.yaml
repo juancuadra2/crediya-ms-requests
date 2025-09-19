@@ -25,7 +25,7 @@ adapters:
     password: "jcuadrado_requests"
   kafka:
     consumer:
-      topic: "dbserver1.public.users"
+      topic: "${DEBEZIUM_TOPIC_PREFIX:crediya.auth}.public.users"
       auto-offset-reset: "earliest"
 management:
   endpoints:
@@ -45,6 +45,9 @@ adapter:
   restconsumer:
     timeout: 5000
     url: "http://localhost:8080"
+  sqs:
+    region: "us-east-1"
+    queueUrl: "https://sqs.us-east-1.amazonaws.com/664751201274/RequestStatusQueue"
 resilience4j:
   circuitbreaker:
     instances:
@@ -60,7 +63,3 @@ resilience4j:
 security:
   jwt:
     secret: "amN1YWRyYWRvX3NlY3JldF9rZXlfZm9yX2p3dF90b2tlbl9nZW5lcmF0aW9u"
-#logging:
-  #level:
-    #io.r2dbc.postgresql.QUERY: "DEBUG"
-    #io.r2dbc.postgresql.PARAM: "DEBUG"

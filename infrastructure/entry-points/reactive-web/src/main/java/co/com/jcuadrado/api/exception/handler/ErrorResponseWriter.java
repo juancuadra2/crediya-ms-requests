@@ -1,7 +1,7 @@
 package co.com.jcuadrado.api.exception.handler;
 
 import co.com.jcuadrado.api.constant.error.LogMessages;
-import co.com.jcuadrado.api.dto.ErrorResponseDTO;
+import co.com.jcuadrado.api.dto.response.ErrorResponseDTO;
 import co.com.jcuadrado.api.util.ResponseUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +28,7 @@ public class ErrorResponseWriter {
         response.setStatusCode(status);
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        ErrorResponseDTO errorResponse = ResponseUtil.buildErrorResponse(messages, status);
+        ErrorResponseDTO errorResponse = ResponseUtil.buildErrorResponse(messages);
         try {
             String jsonResponse = objectMapper.writeValueAsString(errorResponse);
             DataBuffer buffer = response.bufferFactory()

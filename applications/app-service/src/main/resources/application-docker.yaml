@@ -27,7 +27,7 @@ adapters:
     password: "${DB_PASSWORD:jcuadrado_requests}"
   kafka:
     consumer:
-      topic: "dbserver1.public.users"
+      topic: "${DEBEZIUM_TOPIC_PREFIX:crediya.auth}.public.users"
       auto-offset-reset: "earliest"
 
 management:

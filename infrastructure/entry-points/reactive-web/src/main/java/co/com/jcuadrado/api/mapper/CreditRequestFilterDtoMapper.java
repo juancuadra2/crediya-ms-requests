@@ -5,6 +5,6 @@ import co.com.jcuadrado.model.creditrequest.CreditRequestFilter;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface CreditRequestFilterDTOMapper {
+public interface CreditRequestFilterDtoMapper {
     CreditRequestFilter toModel(CreditRequestFilterDTO creditRequestFilterDTO);
 }

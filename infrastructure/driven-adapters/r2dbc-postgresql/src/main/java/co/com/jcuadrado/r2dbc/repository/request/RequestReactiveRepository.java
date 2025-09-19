@@ -67,4 +67,23 @@ public interface RequestReactiveRepository extends ReactiveCrudRepository<Reques
 
     @Query("UPDATE requests SET status_id = :statusId WHERE id = :id RETURNING *")
     Mono<RequestEntity> updateStatusById(@Param("id") UUID id, @Param("statusId") UUID statusId);
+
+    @Query("""
+            SELECT r.id,
+                   r.amount,
+                   r.term,
+                   c.document_number,
+                   CONCAT(c.name, ' ', c.last_name) AS full_name,
+                   r.email,
+                   c.base_salary,
+                   s.name AS status_name,
+                   t.name AS type_name,
+                   t.interest_rate
+            FROM requests r
+                     INNER JOIN status s ON r.status_id = s.id
+                     INNER JOIN types t ON r.type_id = t.id
+                     LEFT JOIN clients c ON c.email = r.email
+            WHERE r.id = :id
+            """)
+    Mono<CreditRequestResultDTO> findCreditRequestById(@Param("id") UUID id);
 }

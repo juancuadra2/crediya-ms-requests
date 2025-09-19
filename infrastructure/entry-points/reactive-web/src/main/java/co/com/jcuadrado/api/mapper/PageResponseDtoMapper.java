@@ -7,8 +7,8 @@ import co.com.jcuadrado.model.creditrequest.CreditRequestResponse;
 import org.mapstruct.Mapper;
 import reactor.core.publisher.Mono;
 
-@Mapper(componentModel = "spring", uses = CreditRequestResponseDTOMapper.class)
-public interface PageResponseDTOMapper {
+@Mapper(componentModel = "spring", uses = CreditRequestResponseDtoMapper.class)
+public interface PageResponseDtoMapper {
     PageResponseDTO<CreditRequestResponseDTO> toDto(PageResponse<CreditRequestResponse> pageResponse);
 
     default Mono<PageResponseDTO<CreditRequestResponseDTO>> toDTOMono(Mono<PageResponse<CreditRequestResponse>> pageResponseMono) {

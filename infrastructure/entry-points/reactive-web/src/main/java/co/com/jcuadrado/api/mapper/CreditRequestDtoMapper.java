@@ -9,7 +9,7 @@ import co.com.jcuadrado.model.creditrequest.CreditRequest;
 import reactor.core.publisher.Mono;
 
 @Mapper(componentModel = "spring")
-public interface CreditRequestDTOMapper {
+public interface CreditRequestDtoMapper {
     
     @Mapping(source = "creditType", target = "type")
     @Mapping(source = "status", target = "status")

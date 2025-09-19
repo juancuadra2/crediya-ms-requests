@@ -5,7 +5,7 @@ import co.com.jcuadrado.api.constant.auth.AuthRoles;
 import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
 import co.com.jcuadrado.api.services.AuthService;
 import co.com.jcuadrado.api.services.BaseRequestService;
-import co.com.jcuadrado.api.mapper.CreditRequestDTOMapper;
+import co.com.jcuadrado.api.mapper.CreditRequestDtoMapper;
 import co.com.jcuadrado.api.util.ResponseUtil;
 import co.com.jcuadrado.model.auth.AuthInfo;
 import co.com.jcuadrado.usecase.creditrequest.CreateCreditRequestUseCase;
@@ -22,7 +22,7 @@ import java.util.Set;
 public class CreateCreditRequestHandler {
 
     private final CreateCreditRequestUseCase createCreditRequestUseCase;
-    private final CreditRequestDTOMapper creditRequestDTOMapper;
+    private final CreditRequestDtoMapper creditRequestDTOMapper;
     private final BaseRequestService baseRequestService;
     private final AuthService authService;
 

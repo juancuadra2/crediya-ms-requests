@@ -4,7 +4,7 @@ import co.com.jcuadrado.api.constant.api.EndpointConstants;
 import co.com.jcuadrado.api.constant.doc.OpenApiConfigConstants;
 import co.com.jcuadrado.api.constant.doc.SecurityConfigConstants;
 import co.com.jcuadrado.api.constant.doc.ServerConfigConstants;
-import co.com.jcuadrado.api.dto.ErrorResponseDTO;
+import co.com.jcuadrado.api.dto.response.ErrorResponseDTO;
 import co.com.jcuadrado.api.dto.request.CreateCreditRequestDTO;
 import co.com.jcuadrado.api.dto.response.CreditRequestDTO;
 import co.com.jcuadrado.api.dto.response.CreditRequestResponseDTO;

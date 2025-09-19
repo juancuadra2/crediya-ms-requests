@@ -3,9 +3,9 @@ package co.com.jcuadrado.api;
 import co.com.jcuadrado.api.constant.api.SuccessHttpStatus;
 import co.com.jcuadrado.api.constant.auth.AuthRoles;
 import co.com.jcuadrado.api.dto.request.CreditRequestFilterDTO;
+import co.com.jcuadrado.api.mapper.PageResponseDtoMapper;
 import co.com.jcuadrado.api.services.AuthService;
-import co.com.jcuadrado.api.mapper.CreditRequestFilterDTOMapper;
-import co.com.jcuadrado.api.mapper.PageResponseDTOMapper;
+import co.com.jcuadrado.api.mapper.CreditRequestFilterDtoMapper;
 import co.com.jcuadrado.api.util.QueryParamUtil;
 import co.com.jcuadrado.api.util.ResponseUtil;
 import co.com.jcuadrado.usecase.creditrequest.GetCreditRequestUseCase;
@@ -22,8 +22,8 @@ import java.util.Set;
 public class GetCreditRequestHandler {
 
     private final GetCreditRequestUseCase getCreditRequestUseCase;
-    private final CreditRequestFilterDTOMapper creditRequestFilterDTOMapper;
-    private final PageResponseDTOMapper pageResponseDTOMapper;
+    private final CreditRequestFilterDtoMapper creditRequestFilterDTOMapper;
+    private final PageResponseDtoMapper pageResponseDTOMapper;
     private final AuthService authService;
 
     public Mono<ServerResponse> listenGetRequests(ServerRequest serverRequest) {

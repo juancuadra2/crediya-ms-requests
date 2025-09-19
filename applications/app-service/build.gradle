@@ -1,6 +1,8 @@
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+	implementation project(':sqs-sender')
+	implementation project(':metrics')
 	implementation project(':kafka-consumer')
 	implementation project(':jwt-security')
 	implementation project(':rest-consumer')

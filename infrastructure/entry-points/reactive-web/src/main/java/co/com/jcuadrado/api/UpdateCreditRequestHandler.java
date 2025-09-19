@@ -4,9 +4,9 @@ import co.com.jcuadrado.api.constant.api.SuccessHttpStatus;
 import co.com.jcuadrado.api.constant.auth.AuthRoles;
 import co.com.jcuadrado.api.constant.validation.CreditRequestValidationConstants;
 import co.com.jcuadrado.api.dto.request.ChangeStatusCreditRequestDto;
+import co.com.jcuadrado.api.mapper.CreditRequestResponseDtoMapper;
 import co.com.jcuadrado.api.services.AuthService;
 import co.com.jcuadrado.api.services.BaseRequestService;
-import co.com.jcuadrado.api.mapper.CreditRequestDTOMapper;
 import co.com.jcuadrado.api.util.*;
 import co.com.jcuadrado.model.auth.AuthInfo;
 import co.com.jcuadrado.usecase.creditrequest.UpdateCreditRequestUseCase;
@@ -25,7 +25,7 @@ import java.util.Set;
 public class UpdateCreditRequestHandler {
 
     private final UpdateCreditRequestUseCase updateCreditRequestUseCase;
-    private final CreditRequestDTOMapper creditRequestDTOMapper;
+    private final CreditRequestResponseDtoMapper creditRequestResponseDTOMapper;
     private final BaseRequestService baseRequestService;
     private final AuthService authService;
 
@@ -38,7 +38,7 @@ public class UpdateCreditRequestHandler {
                 .flatMap(tuple -> {
                     AuthInfo authInfo = tuple.getT2();
                     String status = tuple.getT1().status();
-                    return updateCreditRequestUseCase.changeStatus(requestId, status, authInfo).transform(creditRequestDTOMapper::toDTOMono);
+                    return updateCreditRequestUseCase.changeStatus(requestId, status, authInfo).transform(creditRequestResponseDTOMapper::toDtoMono);
                 })
                 .flatMap(creditRequestDTO -> ResponseUtil.buildSuccessResponse(creditRequestDTO, SuccessHttpStatus.OK));
     }

@@ -7,6 +7,7 @@ import co.com.jcuadrado.model.creditrequest.CreditRequestResponse;
 import co.com.jcuadrado.model.creditrequest.gateways.CreditRequestRepository;
 import co.com.jcuadrado.r2dbc.constant.RequestRepositoryConstants;
 import co.com.jcuadrado.r2dbc.constant.RequestRepositoryNumbers;
+import co.com.jcuadrado.r2dbc.dto.CreditRequestResultDTO;
 import co.com.jcuadrado.r2dbc.entity.RequestEntity;
 import co.com.jcuadrado.r2dbc.helper.ReactiveAdapterOperations;
 import lombok.extern.log4j.Log4j2;
@@ -63,37 +64,20 @@ public class RequestReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<CreditRequest> updateCreditRequestStatus(CreditRequest creditRequest) {
+    public Mono<CreditRequestResponse> updateCreditRequestStatus(CreditRequest creditRequest) {
         log.info(RequestRepositoryConstants.UPDATE_STATUS_ENTRY, creditRequest.getId());
         UUID creditRequestId = UUID.fromString(creditRequest.getId());
         UUID statusId = UUID.fromString(creditRequest.getStatus());
         return super.repository.updateStatusById(creditRequestId, statusId)
-                .flatMap(c1 -> super.repository.findById(c1.getId())
-                        .map(this::toEntity)
-                        .map(result -> {
-                            result.setStatus(String.valueOf(c1.getStatusId()));
-                            result.setCreditType(String.valueOf(c1.getTypeId()));
-                            return result;
-                        })
+                .flatMap(c1 -> super.repository.findCreditRequestById(
+                        c1.getId()).map(this::toCreditRequestResponse)
                 )
                 .doOnNext(c1 -> log.info(RequestRepositoryConstants.UPDATE_STATUS_SUCCESS, c1.getId()))
                 .doOnError(e -> log.error(RequestRepositoryConstants.UPDATE_STATUS_ERROR, e.getMessage()));
     }
 
     private Flux<CreditRequestResponse> getResults(int size, int page, @NonNull String filter, String status) {
-        return repository.findCreditRequests(size, page, filter, status).map(proj -> CreditRequestResponse.builder()
-                        .id(proj.getId().toString())
-                        .amount(proj.getAmount())
-                        .term(proj.getTerm())
-                        .documentNumber(proj.getDocumentNumber())
-                        .fullName(proj.getFullName())
-                        .baseSalary(proj.getBaseSalary())
-                        .email(proj.getEmail())
-                        .status(proj.getStatusName())
-                        .creditType(proj.getTypeName())
-                        .interestRate(proj.getInterestRate())
-                        .build()
-                );
+        return repository.findCreditRequests(size, page, filter, status).map(this::toCreditRequestResponse);
     }
 
     private Mono<PageResponse<CreditRequestResponse>> toPageResponse(Mono<Long> total, Flux<CreditRequestResponse> results, int page, int size) {
@@ -104,5 +88,20 @@ public class RequestReactiveRepositoryAdapter extends ReactiveAdapterOperations<
                 .size(size)
                 .totalPages((int) Math.ceil(count / (double) size))
                 .build());
+    }
+
+    private CreditRequestResponse toCreditRequestResponse(CreditRequestResultDTO creditRequestResultDTO) {
+        return CreditRequestResponse.builder()
+                .id(creditRequestResultDTO.getId().toString())
+                .amount(creditRequestResultDTO.getAmount())
+                .term(creditRequestResultDTO.getTerm())
+                .documentNumber(creditRequestResultDTO.getDocumentNumber())
+                .fullName(creditRequestResultDTO.getFullName())
+                .baseSalary(creditRequestResultDTO.getBaseSalary())
+                .email(creditRequestResultDTO.getEmail())
+                .status(creditRequestResultDTO.getStatusName())
+                .creditType(creditRequestResultDTO.getTypeName())
+                .interestRate(creditRequestResultDTO.getInterestRate())
+                .build();
     }
 }

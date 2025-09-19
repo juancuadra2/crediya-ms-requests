@@ -9,5 +9,5 @@ import reactor.core.publisher.Mono;
 public interface CreditRequestRepository {
     Mono<CreditRequest> saveCreditRequest(CreditRequest creditRequest);
     Mono<PageResponse<CreditRequestResponse>> findCreditRequests(CreditRequestFilter filter);
-    Mono<CreditRequest> updateCreditRequestStatus(CreditRequest creditRequest);
+    Mono<CreditRequestResponse> updateCreditRequestStatus(CreditRequest creditRequest);
 }
