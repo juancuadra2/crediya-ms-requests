@@ -1,0 +1,30 @@
+
+# IDE / editores
+.idea
+.vscode
+*.iml
+
+# Gradle / caches de compilación (evitar subir caches locales)
+.gradle/
+.gradle-cache/
+build/
+build-cache/
+
+# Artefactos generados por módulos
+**/build/
+**/bin/
+
+# Archivos y carpetas raíz del proyecto que no deben incluirse
+README.md
+docs/
+deployment/*.local
+*.log
+
+# Node / otros
+node_modules/
+target/
+
+# VCS y archivos de control
+.git
+.gitignore
+.dockerignore
