@@ -40,7 +40,7 @@ public record GetCreditRequestUseCase(CreditRequestRepository creditRequestRepos
 
         double monthlyRate = monthlyInterestRatePercent.doubleValue() / 100.0;
 
-        if (monthlyRate <= 0) {
+        if (monthlyRate == 0) {
             return amount.divide(BigDecimal.valueOf(term), 2, RoundingMode.HALF_UP);
         }
 

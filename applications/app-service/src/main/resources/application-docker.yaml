@@ -51,6 +51,9 @@ adapter:
   restconsumer:
     timeout: 5000
     url: "${USERS_SERVICE_URL:http://crediya-ms-auth:8080}"
+  sqs:
+    region: "us-east-1"
+    queueUrl: "https://sqs.us-east-1.amazonaws.com/664751201274/RequestStatusQueue"
 
 resilience4j:
   circuitbreaker:

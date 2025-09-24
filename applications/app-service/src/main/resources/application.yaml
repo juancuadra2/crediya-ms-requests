@@ -1,5 +1,6 @@
 server:
   port: 8081
+
 spring:
   application:
     name: "CrediYaMsRequests"
@@ -15,18 +16,20 @@ spring:
     consumer:
       bootstrap-servers: "localhost:9092"
       group-id: "CrediYaMsRequests"
+
 adapters:
   r2dbc:
     host: "localhost"
-    port: 5433
+    port: 5432
     database: "crediya_requests"
     schema: "public"
-    username: "jcuadrado_requests"
-    password: "jcuadrado_requests"
+    username: "crediya_user"
+    password: "+70Ou9gX@5d7"
   kafka:
     consumer:
       topic: "${DEBEZIUM_TOPIC_PREFIX:crediya.auth}.public.users"
       auto-offset-reset: "earliest"
+
 management:
   endpoints:
     web:
@@ -36,11 +39,14 @@ management:
     health:
       probes:
         enabled: true
+      show-details: "when-authorized"
   health:
     circuitbreakers:
       enabled: true
+
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+
 adapter:
   restconsumer:
     timeout: 5000
@@ -60,6 +66,7 @@ resilience4j:
         slidingWindowSize: 10
         minimumNumberOfCalls: 10
         waitDurationInOpenState: "10s"
+
 security:
   jwt:
-    secret: "amN1YWRyYWRvX3NlY3JldF9rZXlfZm9yX2p3dF90b2tlbl9nZW5lcmF0aW9u"
+    secret: "ZGV2ZWxvcG1lbnRfc2VjcmV0X2tleV9mb3JfandoX3Rva2VuX2dlbmVyYXRpb25fY3JlZGl5YV9taWNyb3NlcnZpY2VzXzIwMjQ="
