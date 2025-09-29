@@ -1,0 +1,66 @@
+server:
+  port: 8081
+spring:
+  application:
+    name: "CrediYaMsRequests"
+  devtools:
+    add-properties: false
+  h2:
+    console:
+      enabled: true
+      path: "/h2"
+  profiles:
+    include: null
+  kafka:
+    consumer:
+      bootstrap-servers: "localhost:9092"
+      group-id: "CrediYaMsRequests"
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5433
+    database: "crediya_requests"
+    schema: "public"
+    username: "jcuadrado_requests"
+    password: "jcuadrado_requests"
+  kafka:
+    consumer:
+      topic: "dbserver1.public.users"
+      auto-offset-reset: "earliest"
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+  health:
+    circuitbreakers:
+      enabled: true
+cors:
+  allowed-origins: "http://localhost:4200,http://localhost:8080"
+adapter:
+  restconsumer:
+    timeout: 5000
+    url: "http://localhost:8080"
+resilience4j:
+  circuitbreaker:
+    instances:
+      getUserByDocumentNumber:
+        registerHealthIndicator: true
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: "2s"
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: "10s"
+security:
+  jwt:
+    secret: "amN1YWRyYWRvX3NlY3JldF9rZXlfZm9yX2p3dF90b2tlbl9nZW5lcmF0aW9u"
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: "DEBUG"
+    io.r2dbc.postgresql.PARAM: "DEBUG"

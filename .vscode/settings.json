@@ -1,0 +1,9 @@
+{
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.test.config": {
+        "vmArgs": [
+            "-XX:+EnableDynamicAgentLoading",
+            "-XX:+AllowRedefinitionToAddDeleteMethods"
+        ]
+    },
+}
